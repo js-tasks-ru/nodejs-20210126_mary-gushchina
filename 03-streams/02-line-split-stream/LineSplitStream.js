@@ -32,8 +32,9 @@ class LineSplitStream extends stream.Transform {
 
   _flush(callback) {
     if (this._prevLinePart) {
-      callback(null, this._prevLinePart);
+      this.push(this._prevLinePart);
     }
+    callback();
   }
 }
 
