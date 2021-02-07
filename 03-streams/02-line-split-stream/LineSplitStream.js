@@ -14,14 +14,14 @@ class LineSplitStream extends stream.Transform {
 
     if (!linesCount) {
       this._prevLinePart += chunk.toString();
-    } else if (lines[linesCount - 1]) {
+    } else {
       if (this._prevLinePart) {
         lines[0] = `${this._prevLinePart}${lines[0]}`;
       }
 
       linesQueue = linesQueue.concat(lines.slice(0, linesCount - 1));
       for (const line of linesQueue) {
-        this.push(line);
+        line && this.push(line);
       }
 
       this._prevLinePart = lines[linesCount - 1];
