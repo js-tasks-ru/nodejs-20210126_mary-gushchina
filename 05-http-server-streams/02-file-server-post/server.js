@@ -30,8 +30,9 @@ server.on('request', (req, res) => {
       req.pipe(limitSizeStream).pipe(outStream);
 
       limitSizeStream.on('error', (err) => {
-        res.statusCode = 413;
         fs.unlinkSync(filepath);
+
+        res.statusCode = 413;
         res.end(err.code);
       });
 
@@ -48,7 +49,7 @@ server.on('request', (req, res) => {
 
       req.on('aborted', handleInternalServerError);
 
-      outStream.on('finish', function() {
+      outStream.on('finish', () => {
         res.statusCode = 201;
         res.end('File has uploaded');
       });
