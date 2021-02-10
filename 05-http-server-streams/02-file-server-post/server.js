@@ -31,6 +31,7 @@ server.on('request', (req, res) => {
 
       limitSizeStream.on('error', (err) => {
         res.statusCode = 413;
+        fs.unlinkSync(filepath);
         res.end(err.code);
       });
 
