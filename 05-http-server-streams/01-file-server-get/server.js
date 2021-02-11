@@ -25,9 +25,11 @@ server.on('request', (req, res) => {
         inStream.pipe(res);
       });
 
-      inStream.on('error', () => {
-        res.statusCode = 404;
-        res.end('File is not found');
+      inStream.on('error', (error) => {
+        if (error.code === 'ENOENT') {
+          res.statusCode = 404;
+          res.end('File is not found');
+        }
       });
 
       req.on('aborted', () => {

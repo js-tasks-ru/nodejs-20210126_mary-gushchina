@@ -18,12 +18,6 @@ server.on('request', (req, res) => {
         break;
       }
 
-      if (!fs.existsSync(filepath)) {
-        res.statusCode = 404;
-        res.end('File is not found');
-        break;
-      }
-
       const handleInternalServerError = () => {
         res.statusCode = 500;
         res.end('Internal Server Error');
@@ -35,8 +29,8 @@ server.on('request', (req, res) => {
 
       fs.unlink(filepath, (err) => {
         if (err) {
-          res.statusCode = 500;
-          res.end('Internal Server Error');
+          res.statusCode = 404;
+          res.end('File is not found');
         } else {
           res.statusCode = 200;
           res.end('File has been deleted successfully');

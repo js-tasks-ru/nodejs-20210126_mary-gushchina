@@ -18,14 +18,8 @@ server.on('request', (req, res) => {
         break;
       }
 
-      if (fs.existsSync(filepath)) {
-        res.statusCode = 409;
-        res.end('File already exists');
-        break;
-      }
-
       const limitSizeStream = new LimitSizeStream({limit: 1048576});
-      const outStream = fs.createWriteStream(filepath);
+      const outStream = fs.createWriteStream(filepath, {flags: 'wx'});
 
       req.pipe(limitSizeStream).pipe(outStream);
 
@@ -43,7 +37,14 @@ server.on('request', (req, res) => {
         res.end('Internal Server Error');
       };
 
-      outStream.on('error', handleInternalServerError);
+      outStream.on('error', (error) => {
+        if (error.code === 'EEXIST') {
+          res.statusCode = 409;
+          res.end('File already exists');
+        } else {
+          handleInternalServerError();
+        }
+      });
 
       req.on('error', handleInternalServerError);
 
