@@ -27,8 +27,8 @@ server.on('request', (req, res) => {
 
       req.on('aborted', handleInternalServerError);
 
-      fs.unlink(filepath, (err) => {
-        if (err) {
+      fs.unlink(filepath, (error) => {
+        if (error) {
           res.statusCode = 404;
           res.end('File is not found');
         } else {
