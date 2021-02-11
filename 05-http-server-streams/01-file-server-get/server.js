@@ -18,17 +18,16 @@ server.on('request', (req, res) => {
         break;
       }
 
-      if (!fs.existsSync(filepath)) {
-        res.statusCode = 404;
-        res.end('File is not found');
-        break;
-      }
-
       const inStream = fs.createReadStream(filepath);
 
       inStream.on('open', () => {
         res.statusCode = 200;
         inStream.pipe(res);
+      });
+
+      inStream.on('error', () => {
+        res.statusCode = 404;
+        res.end('File is not found');
       });
 
       req.on('aborted', () => {
